@@ -1,0 +1,14 @@
+{
+    "packages": [
+        "main": {
+            "package": "main\n",
+            "imports": "fmt\n)\n",
+            "functions": [
+                "main": {
+                    "header": "main() {\n",
+                    "body": "fmt.Println('hello world')\n"
+                }
+            ]
+        }
+    ]
+}
