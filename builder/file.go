@@ -2,6 +2,7 @@ package builder
 
 import (
 	"bytes"
+	"fmt"
 	"github.com/spf13/viper"
 	"io/ioutil"
 	"os"
@@ -31,8 +32,8 @@ func BuildFile(key string, name string, path string, permission os.FileMode) *Fi
 
 func getFileContents(key string) []byte {
 	result := new(bytes.Buffer)
-	viper := viper.New()
 	fileMap := viper.GetStringMap(key)
+	fmt.Println(fileMap)
 	for k, v := range fileMap {
 		switch k {
 		case "package":

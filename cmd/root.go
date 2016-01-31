@@ -68,14 +68,14 @@ func initConfig() {
 		viper.SetConfigFile(cfgFile)
 	}
 
-	viper.SetConfigName(".skelly") // name of config file (without extension)
-	viper.AddConfigPath("$HOME")   // adding home directory as first search path
-	viper.AutomaticEnv()           // read in environment variables that match
+	//viper.SetConfigName("webConfig.json") // name of config file (without extension)
+	//viper.AddConfigPath("$HOME/static")   // adding home directory as first search path
+	//viper.AutomaticEnv()                  // read in environment variables that match
 
 	// If a config file is found, read it in.
-	if err := viper.ReadInConfig(); err == nil {
-		fmt.Println("Using config file:", viper.ConfigFileUsed())
-	}
+	//if err := viper.ReadInConfig(); err == nil {
+	//	fmt.Println("Using config file:", viper.ConfigFileUsed())
+	//}
 }
 
 // Generate the string used for the help message
