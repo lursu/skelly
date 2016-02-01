@@ -15,10 +15,7 @@
 package cmd
 
 import (
-	"fmt"
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
-	"text/template"
 )
 
 // webCmd represents the web command
@@ -39,6 +36,7 @@ to quickly create a Cobra application.`,
 func buildFile(name string) {
 
 }
+
 func init() {
 	RootCmd.AddCommand(webCmd)
 
