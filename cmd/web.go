@@ -16,9 +16,9 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/lursu/skelly/builder"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+	"text/template"
 )
 
 // webCmd represents the web command
@@ -32,23 +32,13 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		viper.SetConfigName("webConfig.json") // name of config file (without extension)
-		viper.AddConfigPath("/home/lursu/go-work/src/github/lursu/skelly/static")
-		viper.SetConfigType("json")
-		if err := viper.ReadInConfig(); err == nil {
-			fmt.Println("Using config file:", viper.ConfigFileUsed())
-		} else {
-			fmt.Println(err)
-		}
-		file := builder.BuildFile("packages.main", "main.go", "/home/lursu/go-work/src/", 0700)
-		err := file.Write()
-		if err != nil {
-			fmt.Println(err)
-		}
-		fmt.Println("web called")
+		buildFile("main")
 	},
 }
 
+func buildFile(name string) {
+
+}
 func init() {
 	RootCmd.AddCommand(webCmd)
 
