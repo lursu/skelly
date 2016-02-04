@@ -31,16 +31,21 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		// TODO: Work your own magic here
+		if len(args) <= 0 {
+			errDie("need to at least have a name")
+		}
 		fmt.Println("build called")
 	},
 }
 
+var clean bool
+var name string
+
 func init() {
 
 	// Here you will define your flags and configuration settings.
-
-	buildCmd.PersistentFlags().BoolVarP(&clean, "clean", "c", false, "whether you want to install 3rd party packages")
+	RootCmd.PersistentFlags().StringVarP(&name, "name", "n", "project name", "project name to be used to make your project dir")
+	buildCmd.PersistentFlags().BoolVarP(&clean , "clean", "c", false, "whether you want to install 3rd party packages")
 	// Cobra supports Persistent Flags which will work for this command
 	// and all subcommands, e.g.:
 	// buildCmd.PersistentFlags().String("foo", "", "A help for foo")

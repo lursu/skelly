@@ -23,9 +23,8 @@ import (
 // configCmd represents the config command
 var configCmd = &cobra.Command{
 	Use:   "config",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
+	Short: "set the defaults for options",
+	Long: `used to set defaults for command options that are commonly used:
 
 Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
@@ -37,7 +36,6 @@ to quickly create a Cobra application.`,
 }
 
 func init() {
-	RootCmd.AddCommand(configCmd)
 
 	// Here you will define your flags and configuration settings.
 

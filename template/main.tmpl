@@ -1,1 +1,11 @@
-{{.name}}
+{{if .license}}
+    {{template "license" .}}
+{{end}}
+
+package main
+
+{{template "imports" .}}
+
+func main() {
+    fmt.Println("hello world")
+}

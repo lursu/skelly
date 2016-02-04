@@ -22,8 +22,6 @@ import (
 	"github.com/spf13/viper"
 )
 
-var cfgFile string
-
 // This represents the base command when called without any subcommands
 var RootCmd = &cobra.Command{
 	Use:   "skelly [sub-command]",
@@ -36,12 +34,17 @@ This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
-	//	Run: func(cmd *cobra.Command, args []string) { },
+	Run: func(cmd *cobra.Command, args []string) {
+
+	},
 }
 
 // Execute adds all child commands to the root command sets flags appropriately.
 // This is called by main.main(). It only needs to happen once to the rootCmd.
 func Execute() {
+	addCommands()
+	init()
+
 	if err := RootCmd.Execute(); err != nil {
 		fmt.Println(err)
 		os.Exit(-1)
@@ -50,32 +53,31 @@ func Execute() {
 
 func init() {
 	cobra.OnInitialize(initConfig)
-	RootCmd.SetHelpTemplate(generateLongMessage())
-
-	// Here you will define your flags and configuration settings.
-	// Cobra supports Persistent Flags, which, if defined here,
-	// will be global for your application.
-
-	RootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.skelly.yaml)")
+	RootCmd.PersistentFlags().StringSliceVar(&basePath, "projectroot", "r", "", "root project dirrectory relative to $GOPATH/src")
+	RootCmd.PersistentFlags().StringVarP(&author, "author", "a", "your name", "author name for copyright")
+	RootCmd.PersistentFlags().StringVarP(&email, "email", "e", "your email adress to show up on the files")
+	RootCmd.PersistentFlags().StringVarP(&liscense, "license", "l", "", "name of the license to use")
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
 	RootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
 
+func addCommands() {
+	RootCmd.AddCommand(buildCmd)
+	RootCmd.AddCommand(configCmd)
+}
+
 // initConfig reads in config file and ENV variables if set.
 func initConfig() {
-	if cfgFile != "" { // enable ability to specify config file via flag
-		viper.SetConfigFile(cfgFile)
-	}
-
-	//viper.SetConfigName("webConfig.json") // name of config file (without extension)
-	//viper.AddConfigPath("$HOME/static")   // adding home directory as first search path
-	//viper.AutomaticEnv()                  // read in environment variables that match
+	viper.SetConfigName(".skelly") // name of config file (without extension)
+	viper.AddConfigPath("$HOME")   // adding home directory as first search path
+	viper.SetConfigType("json")
+	viper.AutomaticEnv()                  // read in environment variables that match
 
 	// If a config file is found, read it in.
-	//if err := viper.ReadInConfig(); err == nil {
-	//	fmt.Println("Using config file:", viper.ConfigFileUsed())
-	//}
+	if err := viper.ReadInConfig(); err == nil {
+		fmt.Println("Using config file:", viper.ConfigFileUsed())
+	}
 }
 
 // Generate the string used for the help message

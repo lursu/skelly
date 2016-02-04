@@ -1,6 +1,7 @@
 package cmd
 
 import (
+
 	"bytes"
 	"fmt"
 	"io"
@@ -8,6 +9,32 @@ import (
 	"path/filepath"
 	"text/template"
 )
+
+var basePath = ""
+var liscense = false
+var author = "YOUR NAME"
+var email = "<EMAIL ADDRESS>"
+
+type Project int
+
+var projects = map[string]int{
+	"web": WEB,
+}
+
+const (
+	WEB Project = iota
+)
+
+func errDie(msg interface{}) {
+	fmt.Println("Error:", msg)
+	os.Exit(-1)
+}
+
+func WriteProject(project Project) {
+	switch project{
+	case WEB:
+	}
+}
 
 func WriteTemplateToFile(filePath string, name string, templateName string, data interface{}) error {
 	fileName := filepath.Join(filePath, name)
@@ -83,4 +110,12 @@ func ensureDirExists(path string) {
 		}
 
 	}
+}
+
+func getType(name string) (Project, error) {
+	val, ok := projects[name]
+	if !ok {
+		return nil, error("could not find project type")
+	}
+	return val, nil
 }
