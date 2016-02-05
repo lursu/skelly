@@ -8,16 +8,13 @@ import (
 	"os"
 	"path/filepath"
 	"text/template"
+	"errors"
 )
 
-var basePath = ""
-var liscense = false
-var author = "YOUR NAME"
-var email = "<EMAIL ADDRESS>"
 
 type Project int
 
-var projects = map[string]int{
+var projects = map[string]Project{
 	"web": WEB,
 }
 
@@ -83,7 +80,7 @@ func writeFile(path string, reader io.Reader) error {
 	defer file.Close()
 
 	_, err = io.Copy(file, reader)
-	return
+	return nil
 }
 
 // Check to see if the filepath exists if it doesn't exist we make it
@@ -112,10 +109,15 @@ func ensureDirExists(path string) {
 	}
 }
 
+func joinPath(base string, addition string) string {
+	return filepath.Join(base, addition)
+}
+
 func getType(name string) (Project, error) {
-	val, ok := projects[name]
+	var result Project
+	result, ok := projects[name]
 	if !ok {
-		return nil, error("could not find project type")
+		return result, errors.New("could not find project type")
 	}
-	return val, nil
+	return result, nil
 }

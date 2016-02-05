@@ -20,6 +20,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var projectName string
+
 // buildCmd represents the build command
 var buildCmd = &cobra.Command{
 	Use:   "build",

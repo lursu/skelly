@@ -22,16 +22,13 @@ import (
 	"github.com/spf13/viper"
 )
 
+var gopath string
+
 // This represents the base command when called without any subcommands
 var RootCmd = &cobra.Command{
 	Use:   "skelly [sub-command]",
 	Short: "build the skeliton of a golang application",
-	Long: `A longer description that spans multiple lines and likely contains
-examples and usage of using your application. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Long: `skelly is used to build new go projects templates.`,
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
 	Run: func(cmd *cobra.Command, args []string) {
@@ -42,9 +39,6 @@ to quickly create a Cobra application.`,
 // Execute adds all child commands to the root command sets flags appropriately.
 // This is called by main.main(). It only needs to happen once to the rootCmd.
 func Execute() {
-	addCommands()
-	init()
-
 	if err := RootCmd.Execute(); err != nil {
 		fmt.Println(err)
 		os.Exit(-1)
@@ -52,14 +46,9 @@ func Execute() {
 }
 
 func init() {
-	cobra.OnInitialize(initConfig)
-	RootCmd.PersistentFlags().StringSliceVar(&basePath, "projectroot", "r", "", "root project dirrectory relative to $GOPATH/src")
-	RootCmd.PersistentFlags().StringVarP(&author, "author", "a", "your name", "author name for copyright")
-	RootCmd.PersistentFlags().StringVarP(&email, "email", "e", "your email adress to show up on the files")
-	RootCmd.PersistentFlags().StringVarP(&liscense, "license", "l", "", "name of the license to use")
-	// Cobra also supports local flags, which will only run
-	// when this action is called directly.
-	RootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	cobra.OnInitialize(addCommands)
+	initCommonFlags(RootCmd)
+	initConfig(RootCmd)
 }
 
 func addCommands() {
@@ -67,29 +56,46 @@ func addCommands() {
 	RootCmd.AddCommand(configCmd)
 }
 
+// Set up any flags that are going to be needed for any command
+func initCommonFlags(cmd *cobra.Command) {
+	cmd.Flags().StringVarP(&basePath, "project-root", "r", "root for project", "root project dirrectory relative to $GOPATH/src")
+	cmd.Flags().StringVarP(&author, "author", "a", "your name", "author name for copyright")
+	cmd.Flags().StringVarP(&email, "email", "e", "your email", "your email adress to show up on the files")
+	cmd.Flags().BoolVarP(&license, "license", "l", false, "name of the license to use")
+}
+
 // initConfig reads in config file and ENV variables if set.
-func initConfig() {
+func initConfig(cmd *cobra.Command) {
 	viper.SetConfigName(".skelly") // name of config file (without extension)
 	viper.AddConfigPath("$HOME")   // adding home directory as first search path
 	viper.SetConfigType("json")
 	viper.AutomaticEnv()                  // read in environment variables that match
 
+	fmt.Println("got here")
 	// If a config file is found, read it in.
 	if err := viper.ReadInConfig(); err == nil {
 		fmt.Println("Using config file:", viper.ConfigFileUsed())
 	}
-}
 
-// Generate the string used for the help message
-func generateLongMessage() string {
-	result := `current long discription`
-	if RootCmd.HasAvailableSubCommands() {
-		children := RootCmd.Commands()
-		for i := range children {
-			subHelp := children[i].Long
-			subHelp = fmt.Sprint(children[i].Name(), `- `, subHelp)
-			result = fmt.Sprint(result, subHelp)
-		}
+	// Make sure that go src var is set
+	gopath = viper.GetString("gopath")
+	if len(gopath) <= 0 {
+		gopath = joinPath(os.Getenv("GOPATH"), "src")
+		viper.Set("gopath", gopath)
 	}
-	return result
+
+	if cmd.Flags().Lookup("project-root").Changed {
+		viper.Set("project-root", basePath)
+	}
+	if cmd.Flags().Lookup("author").Changed {
+		fmt.Println("adding author")
+		viper.Set("author", author)
+	}
+	if cmd.Flags().Lookup("email").Changed {
+		viper.Set("email", email)
+	}
+	fmt.Println(email)
+	if cmd.Flags().Lookup("license").Changed {
+		viper.Set("license", license)
+	}
 }

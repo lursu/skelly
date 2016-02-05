@@ -1,4 +1,6 @@
-"author": "YOUR NAME"
-"email": "<EMAIL ADDRESS>"
-"liscense": false
-"basePath": ""
+{
+  "author": "YOUR NAME",
+  "email": "<EMAIL ADDRESS>",
+  "license": false,
+  "basePath": ""
+}

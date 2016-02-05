@@ -15,28 +15,25 @@
 package cmd
 
 import (
-	"fmt"
-
 	"github.com/spf13/cobra"
 )
+
+// variables that can be handled by the config file itself
+var basePath string
+var license bool
+var author string
+var email string
 
 // configCmd represents the config command
 var configCmd = &cobra.Command{
 	Use:   "config",
 	Short: "set the defaults for options",
-	Long: `used to set defaults for command options that are commonly used:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
-	Run: func(cmd *cobra.Command, args []string) {
-		// TODO: Work your own magic here
-		fmt.Println("config called")
-	},
+	Long: `used to set defaults for command options that are commonly used:`, //TODO add examples of usage
 }
 
 func init() {
-
+	//initCommonFlags(configCmd)
+	//initConfig(configCmd)
 	// Here you will define your flags and configuration settings.
 
 	// Cobra supports Persistent Flags which will work for this command
@@ -48,3 +45,4 @@ func init() {
 	// configCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 
 }
+
